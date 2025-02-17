@@ -1,0 +1,11 @@
+[package]
+name = "decoder_value"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde.workspace = true
+ordered-float.workspace = true
+
+indexmap.workspace = true
+indexmap.features = ["serde"]
