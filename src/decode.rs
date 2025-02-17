@@ -1,4 +1,4 @@
-use crate::{Decoder, Error, Result, Value};
+use crate::{Decoder, Result, Value};
 
 use serde::de::{DeserializeOwned, IntoDeserializer};
 
@@ -21,7 +21,7 @@ pub fn from_json<D: Decoder>(decoder: D, json: &str) -> Result<D::Output> {
     use serde::Deserialize;
 
     let value = Value::deserialize(&mut serde_json::Deserializer::from_str(json))
-        .map_err(Error::deserializer)?;
+        .map_err(crate::Error::deserializer)?;
 
     decoder.run(value)
 }
