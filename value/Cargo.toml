@@ -1,7 +1,11 @@
 [package]
 name = "decoder_value"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
+license = "MIT"
+authors = ["Héctor Ramón Jiménez <hector@hecrj.dev>"]
+description = "A generic decoder value"
+repository = "https://github.com/hecrj/decoder"
 
 [dependencies]
 serde.workspace = true
