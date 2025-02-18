@@ -2,6 +2,17 @@ use crate::{to_value, Map, Value};
 
 use serde::Serialize;
 
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __map__ {
+    ($($key:ident=$value:expr),* $(,)?) => {
+        $crate::encode::map([$((stringify!($key), $crate::Value::from($value))),*])
+    };
+}
+
+#[doc(inline)]
+pub use crate::__map__ as map;
+
 pub fn value(data: impl Serialize) -> Value {
     to_value(data).expect("Serialize value")
 }
@@ -43,4 +54,19 @@ pub fn to_json(value: impl Into<Value>) -> Result<String, serde_json::Error> {
 #[cfg(feature = "json")]
 pub fn to_json_pretty(value: impl Into<Value>) -> Result<String, serde_json::Error> {
     serde_json::to_string_pretty(&value.into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn map_macro_creates_a_map() {
+        let person = map!(name = "Spike", surname = "Spiegel");
+
+        assert_eq!(
+            person,
+            map([("name", value("Spike")), ("surname", value("Spiegel"))])
+        );
+    }
 }

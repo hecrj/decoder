@@ -5,7 +5,7 @@ use decoder_value::Value as Raw;
 use indexmap::IndexMap;
 use serde::de::DeserializeOwned;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Map {
     pub(crate) raw: IndexMap<Raw, Raw>,
 }
