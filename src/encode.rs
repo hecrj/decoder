@@ -1,4 +1,4 @@
-use crate::{to_value, Map, Value};
+use crate::{Map, Value, to_value};
 
 use serde::Serialize;
 

@@ -5,9 +5,9 @@ pub use map::Map;
 use crate::Error;
 
 use decoder_value::Value as Raw;
+use serde::Serialize;
 use serde::de;
 use serde::ser;
-use serde::Serialize;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Value(Raw);

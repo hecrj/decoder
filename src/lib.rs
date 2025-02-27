@@ -5,7 +5,7 @@ mod error;
 mod value;
 
 pub use error::Error;
-pub use value::{to_value, Map, Value};
+pub use value::{Map, Value, to_value};
 
 pub type Result<T> = std::result::Result<T, Error>;
 

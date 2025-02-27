@@ -2,7 +2,7 @@ mod de;
 mod ser;
 
 pub use de::{DeserializerError, Unexpected};
-pub use ser::{to_value, SerializerError};
+pub use ser::{SerializerError, to_value};
 
 use indexmap::IndexMap;
 use ordered_float::OrderedFloat;
