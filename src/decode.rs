@@ -12,7 +12,6 @@ pub fn sequence<T, B: FromIterator<T>>(
     move |value: Value| {
         value
             .into_sequence()?
-            .into_iter()
             .map(|value| decoder.run(value))
             .collect()
     }

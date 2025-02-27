@@ -95,7 +95,7 @@ impl<'de> de::Deserialize<'de> for Value {
     }
 }
 
-impl<'de> de::IntoDeserializer<'de, decoder_value::DeserializerError> for Value {
+impl de::IntoDeserializer<'_, decoder_value::DeserializerError> for Value {
     type Deserializer = Raw;
 
     fn into_deserializer(self) -> Raw {

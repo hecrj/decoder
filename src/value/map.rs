@@ -10,6 +10,12 @@ pub struct Map {
     pub(crate) raw: IndexMap<Raw, Raw>,
 }
 
+impl Default for Map {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Map {
     pub fn new() -> Self {
         Self {

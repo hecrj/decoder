@@ -29,7 +29,7 @@ pub enum Unexpected {
     Other(String),
 }
 
-impl<'a> From<de::Unexpected<'a>> for Unexpected {
+impl From<de::Unexpected<'_>> for Unexpected {
     fn from(unexp: de::Unexpected) -> Unexpected {
         match unexp {
             de::Unexpected::Bool(v) => Unexpected::Bool(v),
@@ -55,7 +55,7 @@ impl<'a> From<de::Unexpected<'a>> for Unexpected {
 }
 
 impl Unexpected {
-    pub fn to_unexpected<'a>(&'a self) -> de::Unexpected<'a> {
+    pub fn to_unexpected(&self) -> de::Unexpected<'_> {
         match *self {
             Unexpected::Bool(v) => de::Unexpected::Bool(v),
             Unexpected::Unsigned(v) => de::Unexpected::Unsigned(v),
@@ -319,7 +319,7 @@ impl<'de> de::Deserialize<'de> for Value {
     }
 }
 
-impl<'de> de::IntoDeserializer<'de, DeserializerError> for Value {
+impl de::IntoDeserializer<'_, DeserializerError> for Value {
     type Deserializer = Value;
 
     fn into_deserializer(self) -> Value {
@@ -447,7 +447,7 @@ where
     }
 }
 
-impl<'de, E> de::IntoDeserializer<'de, E> for ValueDeserializer<E>
+impl<E> de::IntoDeserializer<'_, E> for ValueDeserializer<E>
 where
     E: de::Error,
 {
