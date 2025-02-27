@@ -25,7 +25,7 @@ impl Value {
             Raw::Seq(values) => Ok(values.into_iter().map(Self)),
             _ => Err(Error::InvalidType {
                 expected: "sequence",
-                got: self.0.unexpected().into(),
+                got: self.0.unexpected(),
             }),
         }
     }
@@ -35,7 +35,7 @@ impl Value {
             Raw::Map(map) => Ok(Map { raw: map }),
             _ => Err(Error::InvalidType {
                 expected: "map",
-                got: self.0.unexpected().into(),
+                got: self.0.unexpected(),
             }),
         }
     }
