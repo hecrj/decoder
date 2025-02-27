@@ -46,16 +46,6 @@ where
     move |second| f(first, second)
 }
 
-#[cfg(feature = "json")]
-pub fn to_json(value: impl Into<Value>) -> Result<String, serde_json::Error> {
-    serde_json::to_string(&value.into())
-}
-
-#[cfg(feature = "json")]
-pub fn to_json_pretty(value: impl Into<Value>) -> Result<String, serde_json::Error> {
-    serde_json::to_string_pretty(&value.into())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

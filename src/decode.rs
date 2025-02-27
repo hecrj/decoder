@@ -1,4 +1,4 @@
-use crate::{Decoder, Result, Value};
+use crate::{Decoder, Error, Result, Value};
 
 use serde::de::{DeserializeOwned, IntoDeserializer};
 
@@ -6,7 +6,9 @@ pub fn value<T: DeserializeOwned>(value: Value) -> Result<T> {
     Ok(T::deserialize(value.into_deserializer())?)
 }
 
-pub fn sequence<D: Decoder, B: FromIterator<D::Output>>(decoder: D) -> impl Decoder<Output = B> {
+pub fn sequence<T, B: FromIterator<T>>(
+    decoder: impl Decoder<Output = T>,
+) -> impl Decoder<Output = B> {
     move |value: Value| {
         value
             .into_sequence()?
@@ -16,14 +18,15 @@ pub fn sequence<D: Decoder, B: FromIterator<D::Output>>(decoder: D) -> impl Deco
     }
 }
 
-#[cfg(feature = "json")]
-pub fn from_json<D: Decoder>(decoder: D, json: &str) -> Result<D::Output> {
-    use serde::Deserialize;
-
-    let value = Value::deserialize(&mut serde_json::Deserializer::from_str(json))
-        .map_err(crate::Error::deserializer)?;
-
-    decoder.run(value)
+pub fn run<T, I, E>(
+    deserialize: impl Fn(I) -> std::result::Result<Value, E>,
+    decoder: impl Decoder<Output = T>,
+    input: I,
+) -> Result<T>
+where
+    E: std::error::Error + Send + Sync + 'static,
+{
+    decoder.run(deserialize(input).map_err(Error::deserializer)?)
 }
 
 #[cfg(test)]
@@ -76,7 +79,8 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let user = from_json(
+        let user = run(
+            serde_json::from_str,
             User::decode,
             r#"
             {
