@@ -12,6 +12,7 @@ A decoder library for your types.
 </div>
 
 When using [`serde`], your types become entangled with serialization logic due to the [`Serialize`] and [`Deserialize`] traits.
+
 This crate lets you decouple serialization logic by leveraging simple functions, at some performance cost:
 
 ```rust
@@ -73,7 +74,7 @@ let person =
 let _ = serde_json::to_string(&person.encode());
 ```
 
-You should use this crate if the [`serde`] way™ has become painful or it does not resonate with you.
+You can try this crate if the [`serde`] way™ has become painful or it does not resonate with you.
 
 [`serde`]: https://serde.rs
 [`Serialize`]: https://docs.rs/serde/latest/serde/trait.Serialize.html
