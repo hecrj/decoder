@@ -1,6 +1,6 @@
 [package]
 name = "decoder"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 license = "MIT"
 authors = ["Héctor Ramón Jiménez <hector@hecrj.dev>"]
@@ -17,7 +17,7 @@ thiserror.workspace = true
 members = ["value"]
 
 [workspace.dependencies]
-decoder_value.version = "0.0.1"
+decoder_value.version = "0.0.2"
 decoder_value.path = "value"
 
 serde = "1"
