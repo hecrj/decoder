@@ -2,17 +2,6 @@ use crate::{Map, Value, to_value};
 
 use serde::Serialize;
 
-#[doc(hidden)]
-#[macro_export]
-macro_rules! __map__ {
-    ($($key:ident=$value:expr),* $(,)?) => {
-        $crate::encode::map([$((stringify!($key), $crate::Value::from($value))),*])
-    };
-}
-
-#[doc(inline)]
-pub use crate::__map__ as map;
-
 pub fn value(data: impl Serialize) -> Value {
     to_value(data).expect("Serialize value")
 }
@@ -45,6 +34,17 @@ where
 {
     move |second| f(first, second)
 }
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __map__ {
+    ($($key:ident=$value:expr),* $(,)?) => {
+        $crate::encode::map([$((stringify!($key), $crate::Value::from($value))),*])
+    };
+}
+
+#[doc(inline)]
+pub use crate::__map__ as map;
 
 #[cfg(test)]
 mod tests {

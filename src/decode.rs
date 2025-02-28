@@ -1,4 +1,4 @@
-use crate::{Decoder, Error, Result, Value};
+use crate::{Decoder, Result, Value};
 
 use serde::de::{DeserializeOwned, IntoDeserializer};
 
@@ -17,19 +17,10 @@ pub fn sequence<T, B: FromIterator<T>>(
     }
 }
 
-pub fn run<T, I, E>(
-    deserialize: impl Fn(I) -> std::result::Result<Value, E>,
-    decoder: impl Decoder<Output = T>,
-    input: I,
-) -> Result<T>
-where
-    E: std::error::Error + Send + Sync + 'static,
-{
-    decoder.run(deserialize(input).map_err(Error::deserializer)?)
-}
-
 #[cfg(test)]
 mod tests {
+    use crate::run;
+
     use super::*;
 
     struct User {

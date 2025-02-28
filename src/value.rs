@@ -71,6 +71,12 @@ impl From<&str> for Value {
     }
 }
 
+impl From<&String> for Value {
+    fn from(value: &String) -> Self {
+        Self::from(value.to_owned())
+    }
+}
+
 impl From<Option<String>> for Value {
     fn from(value: Option<String>) -> Self {
         Self(Raw::Option(value.map(Raw::String).map(Box::new)))
