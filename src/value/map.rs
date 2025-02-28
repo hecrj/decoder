@@ -5,6 +5,7 @@ use decoder_value::Value as Raw;
 use indexmap::IndexMap;
 use serde::de::DeserializeOwned;
 
+/// A map of fields and their values, sorted by order of insertion.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Map {
     pub(crate) raw: IndexMap<Raw, Raw>,
@@ -17,26 +18,31 @@ impl Default for Map {
 }
 
 impl Map {
+    /// Creates a new empty [`Map`].
     pub fn new() -> Self {
         Self {
             raw: IndexMap::new(),
         }
     }
 
+    /// Decodes the given field of the [`Map`] into a type `T` that implements the [`DeserializeOwned`] trait.
     pub fn required<T: DeserializeOwned>(&mut self, key: &str) -> Result<T> {
         self.required_with(key, decode::value)
     }
 
+    /// Decodes the given field of the [`Map`] using the given [`Decoder`].
     pub fn required_with<T>(&mut self, key: &str, decoder: impl Decoder<Output = T>) -> Result<T> {
         let value = self.get(key)?;
 
         decoder.run(value)
     }
 
+    /// Decodes the given field of the [`Map`] into a type `T` that implements the [`DeserializeOwned`] trait, if present.
     pub fn optional<T: DeserializeOwned>(&mut self, key: &str) -> Result<Option<T>> {
         self.optional_with(key, decode::value)
     }
 
+    /// Decodes the given field of the [`Map`] using the given [`Decoder`], if present.
     pub fn optional_with<T>(
         &mut self,
         key: &str,
@@ -53,17 +59,21 @@ impl Map {
         decoder.run(value).map(Some)
     }
 
+    /// Inserts a field in the [`Map`] before all the other fields.
     pub fn tag(mut self, key: &str, value: impl Into<Value>) -> Self {
-        self.raw
+        let _ = self
+            .raw
             .insert_before(0, Raw::String(key.to_owned()), value.into().0);
         self
     }
 
+    /// Extends the [`Map`] with the fields of the given one.
     pub fn extend(mut self, other: Self) -> Self {
         self.raw.extend(other.raw);
         self
     }
 
+    /// Converts the [`Map`] into a [`Value`].
     pub fn into_value(self) -> Value {
         Value::from(Raw::Map(self.raw))
     }

@@ -74,13 +74,17 @@ mod error;
 mod value;
 
 pub use error::Error;
-pub use value::{Map, Value, to_value};
+pub use value::{Map, Value};
 
+/// A decoding result.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Some logic that turns a [`Value`] into some [`Output`](Self::Output).
 pub trait Decoder {
+    /// The output of the [`Decoder`].
     type Output;
 
+    /// Runs the [`Decoder`].
     fn run(&self, value: Value) -> Result<Self::Output>;
 }
 
@@ -95,6 +99,8 @@ where
     }
 }
 
+/// Runs a [`Decoder`] using the given function to deserialize a [`Value`]
+/// from the given input.
 pub fn run<T, I, E>(
     deserialize: impl Fn(I) -> std::result::Result<Value, E>,
     decoder: impl Decoder<Output = T>,

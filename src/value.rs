@@ -9,10 +9,12 @@ use serde::Serialize;
 use serde::de;
 use serde::ser;
 
+/// A generic value.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Value(Raw);
 
 impl Value {
+    /// Returns the [`Value`] as a string slice, if it is a string.
     pub fn as_str(&self) -> Option<&str> {
         match &self {
             Self(Raw::String(string)) => Some(string),
@@ -20,6 +22,7 @@ impl Value {
         }
     }
 
+    /// Converts the [`Value`] into a sequence, if it is a sequence.
     pub fn into_sequence(self) -> Result<impl Iterator<Item = Value>, Error> {
         match self.0 {
             Raw::Seq(values) => Ok(values.into_iter().map(Self)),
@@ -30,6 +33,7 @@ impl Value {
         }
     }
 
+    /// Converts the [`Value`] into a [`Map`], if it is a map.
     pub fn into_map(self) -> Result<Map, Error> {
         match self.0 {
             Raw::Map(map) => Ok(Map { raw: map }),
@@ -41,7 +45,7 @@ impl Value {
     }
 }
 
-pub fn to_value(data: impl Serialize) -> Result<Value, Error> {
+pub(crate) fn to_value(data: impl Serialize) -> Result<Value, Error> {
     Ok(Value(
         decoder_value::to_value(data).map_err(Error::deserializer)?,
     ))

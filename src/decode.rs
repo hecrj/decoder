@@ -1,11 +1,15 @@
+//! Decode your types.
 use crate::{Decoder, Result, Value};
 
 use serde::de::{DeserializeOwned, IntoDeserializer};
 
+/// Deserializes a [`Value`] into a type `T` that implements [`DeserializeOwned`].
 pub fn value<T: DeserializeOwned>(value: Value) -> Result<T> {
     Ok(T::deserialize(value.into_deserializer())?)
 }
 
+/// Takes a [`Decoder`] of a certain type `T` and produces a new [`Decoder`] that
+/// decodes a sequence of `T` values.
 pub fn sequence<T, B: FromIterator<T>>(
     decoder: impl Decoder<Output = T>,
 ) -> impl Decoder<Output = B> {
@@ -98,6 +102,6 @@ mod tests {
                     repository: "https://github.com/hecrj/sipper".to_owned()
                 },
             ]
-        )
+        );
     }
 }

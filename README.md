@@ -70,7 +70,7 @@ impl Project {
 let person =
     decoder::run(serde_json::from_str, Person::decode, "{ ... }").expect("Decode person");
 
-let _ = serde_json::to_string(person.encode());
+let _ = serde_json::to_string(&person.encode());
 ```
 
 You should use this crate if the [`serde`] way™ has become painful or it does not resonate with you.
