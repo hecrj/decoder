@@ -1,9 +1,7 @@
-use crate::decode;
 use crate::{Decoder, Error, Result, Value};
 
 use decoder_value::Value as Raw;
 use indexmap::IndexMap;
-use serde::de::DeserializeOwned;
 
 /// A map of fields and their values, sorted by order of insertion.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -25,25 +23,15 @@ impl Map {
         }
     }
 
-    /// Decodes the given field of the [`Map`] into a type `T` that implements the [`DeserializeOwned`] trait.
-    pub fn required<T: DeserializeOwned>(&mut self, key: &str) -> Result<T> {
-        self.required_with(key, decode::value)
-    }
-
     /// Decodes the given field of the [`Map`] using the given [`Decoder`].
-    pub fn required_with<T>(&mut self, key: &str, decoder: impl Decoder<Output = T>) -> Result<T> {
+    pub fn required<T>(&mut self, key: &str, decoder: impl Decoder<Output = T>) -> Result<T> {
         let value = self.get(key)?;
 
         decoder.run(value)
     }
 
-    /// Decodes the given field of the [`Map`] into a type `T` that implements the [`DeserializeOwned`] trait, if present.
-    pub fn optional<T: DeserializeOwned>(&mut self, key: &str) -> Result<Option<T>> {
-        self.optional_with(key, decode::value)
-    }
-
     /// Decodes the given field of the [`Map`] using the given [`Decoder`], if present.
-    pub fn optional_with<T>(
+    pub fn optional<T>(
         &mut self,
         key: &str,
         decoder: impl Decoder<Output = T>,
@@ -60,10 +48,10 @@ impl Map {
     }
 
     /// Inserts a field in the [`Map`] before all the other fields.
-    pub fn tag(mut self, key: &str, value: impl Into<Value>) -> Self {
+    pub fn tag(mut self, key: &str, value: impl Into<String>) -> Self {
         let _ = self
             .raw
-            .insert_before(0, Raw::String(key.to_owned()), value.into().0);
+            .insert_before(0, Raw::String(key.to_owned()), Raw::String(value.into()));
         self
     }
 

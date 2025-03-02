@@ -31,8 +31,8 @@ pub enum Error {
 
 impl Error {
     /// Creates a custom [`Error`].
-    pub fn custom(error: impl Into<String>) -> Self {
-        Self::Custom(error.into())
+    pub fn custom(error: impl ToString) -> Self {
+        Self::Custom(error.to_string())
     }
 
     pub(crate) fn deserializer(error: impl std::error::Error + Send + Sync + 'static) -> Self {
