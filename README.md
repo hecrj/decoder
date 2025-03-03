@@ -16,7 +16,7 @@ When using [`serde`], your types become entangled with serialization logic due t
 This crate lets you decouple serialization logic by leveraging simple functions, at some performance cost:
 
 ```rust
-use decoder::{Result, Value};
+use decoder::{Map, Result, Value};
 
 struct Person {
     name: String,
@@ -30,41 +30,47 @@ struct Project {
 
 impl Person {
     fn decode(value: Value) -> Result<Self> {
-        use decoder::decode::sequence;
+        use decoder::decode::{map, sequence, string};
 
-        let mut person = value.into_map()?;
+        let mut person = map(value)?;
 
         Ok(Self {
-            name: person.required("name")?,
-            projects: person.required_with("projects", sequence(Project::decode))?,
+            name: person.required("name", string)?,
+            projects: person.required("projects", sequence(Project::decode))?,
         })
     }
 
     fn encode(&self) -> Value {
-        use decoder::encode::{map, sequence};
+        use decoder::encode::{map, sequence, string};
 
-        map!(
-            name = &self.name,
-            projects = sequence(Project::encode, &self.projects)
-        )
+        map([
+            ("name", string(&self.name)),
+            ("projects", sequence(Project::encode, &self.projects)),
+        ])
         .into()
     }
 }
 
 impl Project {
     fn decode(value: Value) -> Result<Self> {
-        let mut project = value.into_map()?;
+        use decoder::decode::{map, string};
+
+        let mut project = map(value)?;
 
         Ok(Project {
-            name: project.required("name")?,
-            url: project.required("url")?,
+            name: project.required("name", string)?,
+            url: project.required("url", string)?
         })
     }
 
     fn encode(&self) -> Value {
-        use decoder::encode::map;
+        use decoder::encode::{map, string};
 
-        map!(name = &self.name, url = &self.url).into()
+        map([
+            ("name", string(&self.name)),
+            ("url", string(&self.url)),
+        ])
+        .into()
     }
 }
 

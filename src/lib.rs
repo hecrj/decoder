@@ -9,7 +9,7 @@
 //!
 //! struct Person {
 //!     name: String,
-//!     projects: Vec<Project>
+//!     projects: Vec<Project>,
 //! }
 //!
 //! struct Project {
